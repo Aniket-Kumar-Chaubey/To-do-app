@@ -1,0 +1,45 @@
+{% extends "todo/base.html" %}
+{% block content %}
+
+<form action="/addTodo/" method="POST" class="input-group mb-3">
+  {% csrf_token %}
+  <input type="text" name="content" class="form-control" placeholder="Enter your title" aria-describedby="button-addon2" />
+  <input type="text" name="title" class="form-control" placeholder="Enter your task list" aria-describedby="button-addon2" />
+  <input type="submit" value="Add" class="btn btn-outline-secondary" />
+</form>
+{% for post in all_todo %}
+<div class="card border-dark mb-3">
+  <div class="card-header">
+    <form action="{% url 'completed' %}" method="POST">
+      {% csrf_token %}
+        {% if post.status %}
+            <input class="form-check-input" type='checkbox' checked = 'checked' value={{post.id}} name= 'boxes'>
+          {% else %}
+            <input class="form-check-input" type='checkbox' value={{post.id}} name= 'boxes'>
+          {% endif %}
+          <small>{{post.date_posted}}</small>
+        <button type="submit" class="btn btn-success" style="margin-left:540px; margin-top:-50px; height:10px;">Mark as Completed</button>
+    </form>
+  </div>
+  <div class="card-body text-dark">
+    <h5 class="card-title">
+      {% if post.title != "" %}
+        {{post.title}}
+      {% endif  %}
+    </h5>
+    <p class="card-text">{{post.content}}</p>
+
+    <div class="input-group mb-3">
+      <form action="/delete/{{post.id}}/" method="POST">{% csrf_token %}
+        <input type="submit" href="#" class="btn btn-danger" value="Delete">
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+{% endblock %}
+
+
+{% block todo_objects %}
+{% endblock %}
